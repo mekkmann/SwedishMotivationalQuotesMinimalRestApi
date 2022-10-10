@@ -6,10 +6,18 @@ using System.ComponentModel.DataAnnotations;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<QuoteDb>(opt => opt.UseInMemoryDatabase("QuoteList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.MapFallback(() => Results.Redirect("/swagger"));
 
 app.MapGet("/", () => "If you can see this, it works!");
 
@@ -18,9 +26,15 @@ app.MapGet("/quotes", async (QuoteDb db) =>
                     .ToListAsync());
 
 app.MapGet("/quotes/search/{author}", async (QuoteDb db, string author) =>
-    await db.Quotes.Where(q => q.Author.ToLower().Contains(author.ToLower()) == true)
+{
+    var quoteList = await db.Quotes.Where(q => q.Author.ToLower().Contains(author.ToLower()) == true)
                     .Select(q => new QuoteDTO(q))
-                     .ToListAsync());
+                     .ToListAsync();
+
+    if (quoteList.Count == 0) return Results.NotFound("No quotes with that author was found.");
+
+    return Results.Ok(quoteList);
+});
 
 app.MapGet("/quotes/{id}", async (int id, QuoteDb db) =>
     await db.Quotes.FindAsync(id)
@@ -77,6 +91,9 @@ app.MapDelete("/quotes/{id}", async (int id, QuoteDb db) =>
 });
 
 app.Run();
+
+// Partial class is for XUnit to be able to access program.cs and let us write tests against it
+public partial class Program {}
 
 
 namespace Models

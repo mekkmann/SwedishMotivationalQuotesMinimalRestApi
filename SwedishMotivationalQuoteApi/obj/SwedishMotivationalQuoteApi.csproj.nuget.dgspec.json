@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\pontu\\source\\repos\\src\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj": {}
+    "C:\\Users\\pontu\\GitHubRepos\\SwedishMotivationalQuotesMinimalRestApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\pontu\\source\\repos\\src\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj": {
+    "C:\\Users\\pontu\\GitHubRepos\\SwedishMotivationalQuotesMinimalRestApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pontu\\source\\repos\\src\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj",
+        "projectUniqueName": "C:\\Users\\pontu\\GitHubRepos\\SwedishMotivationalQuotesMinimalRestApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj",
         "projectName": "SwedishMotivationalQuoteApi",
-        "projectPath": "C:\\Users\\pontu\\source\\repos\\src\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj",
+        "projectPath": "C:\\Users\\pontu\\GitHubRepos\\SwedishMotivationalQuotesMinimalRestApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj",
         "packagesPath": "C:\\Users\\pontu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pontu\\source\\repos\\src\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi\\obj\\",
+        "outputPath": "C:\\Users\\pontu\\GitHubRepos\\SwedishMotivationalQuotesMinimalRestApi\\SwedishMotivationalQuoteApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pontu\\AppData\\Roaming\\NuGet\\NuGet.Config",

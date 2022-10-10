@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kMO1qUHqw35sHi5tNeDhEWBR7pOfUPfuL3aknhh0ypFy59x+q0EWBAN06e0ZrceRyOobaU7zfHSbk+sktmv9FA==",
+  "dgSpecHash": "TVeszqD0MolhR4iq8ceTWc/1CNHzHp7QQb7Vm97V/jxvRK97xdvl2RIz2YwGa3MkeeC/3F6ZWweVy2sHCJ+JjQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\pontu\\source\\repos\\src\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj",
+  "projectFilePath": "C:\\Users\\pontu\\GitHubRepos\\SwedishMotivationalQuotesMinimalRestApi\\SwedishMotivationalQuoteApi\\SwedishMotivationalQuoteApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pontu\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\6.0.8\\microsoft.aspnetcore.diagnostics.entityframeworkcore.6.0.8.nupkg.sha512",
     "C:\\Users\\pontu\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.8\\microsoft.entityframeworkcore.6.0.8.nupkg.sha512",
