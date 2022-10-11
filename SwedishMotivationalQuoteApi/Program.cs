@@ -15,6 +15,20 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    using (var scope = app.Services.CreateScope())
+    using (var dbContext = scope.ServiceProvider.GetRequiredService<QuoteDb>())
+    {
+        try
+        {
+            // NOTE Using EnsureCreated is not recommended for relational db if one plans to use EF Migrations
+            dbContext.Database.EnsureCreated();
+        }
+        catch (Exception ex)
+        {
+            // TODO Log error here
+            throw;
+        }
+    }
 }
 
 app.MapFallback(() => Results.Redirect("/swagger"));
@@ -118,6 +132,40 @@ namespace Models
             (Id, Author, Text) = (quote.Id, quote.Author, quote.Text);
     }
 
+    public class SeedData
+    {
+        public static QuoteDTO[] Quotes()
+        {
+            var id = 1;
+
+            var quotes = new QuoteDTO[]
+                {
+                    new QuoteDTO
+                    {
+                        Id = id++,
+                        Author = "Dennis Gabor",
+                        Text = "Det bästa sättet att förutspå framtiden är att skapa den.",
+                        
+                    },
+                    new QuoteDTO
+                    {
+                        Id = id++,
+                        Author = "Mahatma Gandhi",
+                        Text = "Lev som om du skulle dö imorgon, lär som att du skulle leva förevigt.",
+                        
+                    },
+                    new QuoteDTO
+                    {
+                        Id = id++,
+                        Author = "Pablo Picasso",
+                        Text = "Handling är den grundläggande nyckeln till framgång.",
+                        
+                    }
+                };
+            return quotes;
+        }
+    }
+
 };
 
 namespace Data
@@ -127,7 +175,15 @@ namespace Data
         public QuoteDb(DbContextOptions<QuoteDb> options)
             : base(options) { }
 
-        public DbSet<Quote> Quotes => Set<Quote>();
+        // public DbSet<Quote> Quotes => Set<Quote>();
+        public DbSet<Quote> Quotes {get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Quote>().HasData(SeedData.Quotes());
+        }
 
     }
 };

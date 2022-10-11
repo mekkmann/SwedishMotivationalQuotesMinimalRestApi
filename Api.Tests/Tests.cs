@@ -4,15 +4,13 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Text;
 using Models;
+using Data;
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 
 public class Tests
 {
-
-    // TODO: Seed database when testing
-
     HttpClient _client;
 
     public Tests()
@@ -54,41 +52,28 @@ public class Tests
 
         var jsonGetResponse = getResponse.Content.ReadFromJsonAsync<QuoteDTO[]>();
         
-        // checks that JSON returned from getResponse is not empty
-        jsonGetResponse.Result.Should().NotBeEmpty();
+        // checks that JSON returned from getResponse has a length of 4
+        jsonGetResponse.Result.Should().HaveCount(4);
     }
 
     [Fact]
     public async Task Get_All_Quotes()
     {
+        var items = SeedData.Quotes();
 
-        // TODO : Here is where having it seeded would be nice
-        
         var getResponse = await _client.GetAsync("/quotes");
 
         // checks statuscode of getResponse
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
 
-        var jsonGetResponse = getResponse.Content.ReadFromJsonAsync<QuoteDTO[]>();
-
-        //checks length of JSON returned from getResponse
-        jsonGetResponse.Result.Should().HaveCount(0);
-
+        var jsonGetResponse = await getResponse.Content.ReadFromJsonAsync<QuoteDTO[]>();
+        
+        jsonGetResponse.Should().BeEquivalentTo(items);
     }
 
     [Fact]
     public async Task Can_Get_With_Id()
     {
-        var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 3,
-            Author = "Dennis Gabor",
-            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
-            Secret = "qwerty"
-        });
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        await _client.PostAsync("/quotes", content);
-
         var getResponse = await _client.GetAsync("/quotes/3");
 
         // checks statuscode of getResponse
@@ -97,16 +82,6 @@ public class Tests
     [Fact]
     public async Task Get_With_Non_Existing_Id_Returns_404()
     {
-        var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 1,
-            Author = "Dennis Gabor",
-            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
-            Secret = "qwerty"
-        });
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        await _client.PostAsync("/quotes", content);
-
         var getResponse = await _client.GetAsync("/quotes/999");
 
         // checks statuscode of getResponse
@@ -116,16 +91,6 @@ public class Tests
     [Fact]
     public async Task Can_Search_For_Quotes_With_Full_Author_Name()
     {
-        var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 1,
-            Author = "Dennis Gabor",
-            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
-            Secret = "qwerty"
-        });
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        await _client.PostAsync("/quotes", content);
-
         var getResponse = await _client.GetAsync("/quotes/search/Dennis%20Gabor");
 
         // checks statuscode of getResponse
@@ -135,17 +100,8 @@ public class Tests
     [Fact]
     public async Task Can_Search_For_Quotes_With_Partial_Author_Name()
     {
-        var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 1,
-            Author = "Dennis Gabor",
-            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
-            Secret = "qwerty"
-        });
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        await _client.PostAsync("/quotes", content);
-
         var getResponse = await _client.GetAsync("/quotes/search/gab");
+        
         // checks statuscode of getResponse
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
     }
@@ -153,16 +109,6 @@ public class Tests
     [Fact]
     public async Task Search_For_Quotes_With_Non_Existing_Author_Returns_404()
     {
-        var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 1,
-            Author = "Dennis Gabor",
-            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
-            Secret = "qwerty"
-        });
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        await _client.PostAsync("/quotes", content);
-
         var getResponse = await _client.GetAsync("/quotes/search/gabbagool");
 
         // checks statuscode of getResponse
@@ -172,16 +118,6 @@ public class Tests
     [Fact]
     public async Task Put_Updates_Quote()
     {
-        var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 1,
-            Author = "Dennis Gabor",
-            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
-            Secret = "qwerty"
-        });
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        await _client.PostAsync("/quotes", content);
-
         var payload2 = JsonConvert.SerializeObject(new Quote{
             Id = 1,
             Author = "Dennis Panjuta",
@@ -207,17 +143,7 @@ public class Tests
     [Fact]
     public async Task Delete_Removes_From_Db_And_Returns_OK()
     {
-        var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 1,
-            Author = "Dennis Gabor",
-            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
-            Secret = "qwerty"
-        });
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        await _client.PostAsync("/quotes", content);
-
-
+    
         var deleteResponse = await _client.DeleteAsync("/quotes/1");
 
         // checks statuscode of deleteResponse
