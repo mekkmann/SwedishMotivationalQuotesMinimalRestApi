@@ -80,7 +80,7 @@ public class Tests
     public async Task Can_Get_With_Id()
     {
         var payload = JsonConvert.SerializeObject(new Quote{
-            Id = 1,
+            Id = 3,
             Author = "Dennis Gabor",
             Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
             Secret = "qwerty"
@@ -89,7 +89,7 @@ public class Tests
 
         await _client.PostAsync("/quotes", content);
 
-        var getResponse = await _client.GetAsync("/quotes/1");
+        var getResponse = await _client.GetAsync("/quotes/3");
 
         // checks statuscode of getResponse
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
@@ -167,6 +167,69 @@ public class Tests
 
         // checks statuscode of getResponse
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task Put_Updates_Quote()
+    {
+        var payload = JsonConvert.SerializeObject(new Quote{
+            Id = 1,
+            Author = "Dennis Gabor",
+            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
+            Secret = "qwerty"
+        });
+        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+        await _client.PostAsync("/quotes", content);
+
+        var payload2 = JsonConvert.SerializeObject(new Quote{
+            Id = 1,
+            Author = "Dennis Panjuta",
+            Text = "Vägen till framgång",
+            Secret = "qwerty"
+        });
+        var content2 = new StringContent(payload2, Encoding.UTF8, "application/json");
+
+        var putResponse = await _client.PutAsync("/quotes/1", content2);
+
+        // checks statuscode of putResponse
+        Assert.Equal(HttpStatusCode.NoContent, putResponse.StatusCode);
+
+        var jsonGetResponse = await _client.GetFromJsonAsync<QuoteDTO>("/quotes/1");
+
+        // checks that the update changed the author
+        Assert.Equal("Dennis Panjuta", jsonGetResponse?.Author);
+
+        // checks that the update changed the text
+        Assert.Equal("Vägen till framgång", jsonGetResponse?.Text);
+    }
+
+    [Fact]
+    public async Task Delete_Removes_From_Db_And_Returns_OK()
+    {
+        var payload = JsonConvert.SerializeObject(new Quote{
+            Id = 1,
+            Author = "Dennis Gabor",
+            Text = "Det bästa sättet att förutspå framtiden är genom att skapa den.",
+            Secret = "qwerty"
+        });
+        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+        await _client.PostAsync("/quotes", content);
+
+
+        var deleteResponse = await _client.DeleteAsync("/quotes/1");
+
+        // checks statuscode of deleteResponse
+        Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+
+        var getResponse = await _client.GetAsync("/quotes");
+        var jsonGetResponse = getResponse.Content.ReadFromJsonAsync<QuoteDTO[]>();
+
+        // checks that the quote was removed
+        foreach ( QuoteDTO quote in jsonGetResponse.Result){
+            quote.Id.Should().NotBe(1);
+        }
     }
 
 }
