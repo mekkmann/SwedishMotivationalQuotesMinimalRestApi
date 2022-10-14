@@ -1,3 +1,5 @@
+# I know it's not a RESTful api yet, it's in development :)
+
 # SwedishMotivationalQuotesMinimalRestApi
 A minimal RESTful web api for motivational quotes in Swedish
 
